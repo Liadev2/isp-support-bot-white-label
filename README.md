@@ -34,10 +34,10 @@ Desarrollado con ❤️ para ISP españoles y latinoamericanos.
 
 ## Capturas de Pantalla
 
-![Servidor corriendo](screenshots/01-servidor-corriendo.png)
-![Prueba IA en Thunder Client](screenshots/02-prueba-ai-chat.png)
-![Health Check](screenshots/03-health-check.png)
-![Panel Admin](screenshots/04-panel-admin.png)
-![Flujo no internet](screenshots/05-flujo-no-internet.png)
+![Servidor corriendo](screenshots/terminal.png)
+![Prueba IA en Thunder Client](screenshots/thunder.png)
+![Health Check](screenshots/localhost.png)
+![Panel Admin](screenshots/flow.png)
+![Flujo no internet](screenshots/flow2.png)
 
 **El bot funcionando en menos de 5 minutos.**
