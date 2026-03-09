@@ -1,0 +1,86 @@
+{
+ "start": {
+  "message": "Hola 👋 Soy el asistente del proveedor de internet. ¿En qué puedo ayudarte?",
+  "options": {
+   "1": {
+    "text": "Internet no funciona",
+    "next": "no_internet"
+   },
+   "2": {
+    "text": "Internet lento",
+    "next": "slow_internet"
+   },
+   "3": {
+    "text": "Consultar factura",
+    "next": "billing"
+   },
+   "4": {
+    "text": "Hablar con soporte",
+    "next": "support"
+   }
+  }
+ },
+
+ "no_internet": {
+  "message": "¿Las luces del router están encendidas?",
+  "options": {
+   "1": {
+    "text": "Sí",
+    "next": "restart_router"
+   },
+   "2": {
+    "text": "No",
+    "next": "check_power"
+   }
+  }
+ },
+
+ "restart_router": {
+  "message": "Desconecta el router durante 30 segundos y vuelve a conectarlo. ¿Funcionó?",
+  "options": {
+   "1": {
+    "text": "Sí, funciona",
+    "next": "resolved"
+   },
+   "2": {
+    "text": "No funciona",
+    "next": "create_ticket"
+   }
+  }
+ },
+
+ "check_power": {
+  "message": "Revisa si el router está conectado a la corriente.",
+  "options": {
+   "1": {
+    "text": "Listo",
+    "next": "start"
+   }
+  }
+ },
+
+ "resolved": {
+  "message": "Perfecto 🎉 El problema está resuelto.",
+  "options": {}
+ },
+
+ "create_ticket": {
+  "message": "Voy a crear un ticket para soporte técnico.",
+  "options": {}
+ },
+
+ "billing": {
+  "message": "Puedes consultar tu factura en el área de clientes.",
+  "options": {}
+ },
+
+ "support": {
+  "message": "Un agente humano te responderá pronto.",
+  "options": {}
+ },
+
+ "default": {
+  "message": "No entendí tu consulta. ¿Puedes reformularla?",
+  "options": {}
+ }
+}

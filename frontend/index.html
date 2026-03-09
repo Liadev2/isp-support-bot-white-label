@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>ISP Bot Demo</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="chat-widget">
+
+<div class="chat-header">
+ISP Soporte
+</div>
+
+<div id="messages" class="chat-messages"></div>
+
+<div id="options" class="chat-options"></div>
+
+</div>
+
+<script>
+
+let currentNode = null
+
+async function startChat(){
+
+const res = await fetch("http://localhost:3000/chat",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({})
+})
+
+const data = await res.json()
+
+currentNode = "start"
+
+renderNode(data.data)
+
+}
+
+async function selectOption(option){
+
+const res = await fetch("http://localhost:3000/chat",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+nodeId: currentNode,
+option: option
+})
+})
+
+const data = await res.json()
+
+renderNode(data.data)
+
+}
+
+function renderNode(node){
+
+const messages = document.getElementById("messages")
+const options = document.getElementById("options")
+
+messages.innerHTML += `<div class="bot">${node.message}</div>`
+
+options.innerHTML=""
+
+if(node.options){
+
+Object.keys(node.options).forEach(key=>{
+
+const btn=document.createElement("button")
+
+btn.innerText=node.options[key].text
+
+btn.onclick=()=>{
+currentNode=node.options[key].next
+selectOption(key)
+}
+
+options.appendChild(btn)
+
+})
+
+}
+
+}
+
+startChat()
+
+</script>
+
+</body>
+
+</html>
