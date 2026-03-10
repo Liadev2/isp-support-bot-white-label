@@ -31,13 +31,3 @@ Clasificación automática de intenciones + árbol de decisiones + fallback segu
 Este bot está listo para producción. Si necesitas personalización (logo, colores, más intents), contáctame.
 
 Desarrollado para ISP españoles y latinoamericanos.
-
-## Capturas de Pantalla
-
-![Servidor corriendo](screenshots/01-servidor-corriendo.png)
-![Prueba IA en Thunder Client](screenshots/02-prueba-ai-chat.png)
-![Health Check](screenshots/03-health-check.png)
-![Panel Admin](screenshots/04-panel-admin.png)
-![Flujo no internet](screenshots/05-flujo-no-internet.png)
-
-**El bot funcionando en menos de 5 minutos.**
