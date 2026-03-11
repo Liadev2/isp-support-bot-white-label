@@ -6,6 +6,8 @@ const rateLimit = require("express-rate-limit");
 
 const { detectIntent } = require("./engine/aiEngine");
 const { getNode, getNextNode } = require("./engine/decisionEngine");
+const { tenantIsolation } = require("./middleware/tenantIsolation");
+const { loadTenantFlowSync, saveTenantFlowSync } = require("./lib/tenantFlowStore");
 
 const app = express();
 
@@ -25,21 +27,35 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // =====================
-// CARGA DE FLUJO (una sola vez)
+// CARGA DE FLUJO (plantilla por defecto)
 // =====================
-const flow = require("./flows/flow.json");
-console.log("✅ flow.json cargado correctamente");
+require("./flows/flow.json");
+console.log("✅ flow.json (default) cargado correctamente");
+
+// =====================
+// HEALTHCHECK (público)
+// =====================
+app.get("/test", (req, res) => res.send("✅ Servidor ISP Bot funcionando correctamente"));
+
+// =====================
+// TENANT ISOLATION (multi-tenant)
+// =====================
+// Aplica sólo a endpoints que leen/escriben datos “del ISP”.
+const tenantRouter = express.Router();
+tenantRouter.use(tenantIsolation);
 
 // =====================
 // ENDPOINT PRINCIPAL: IA + CLASIFICACIÓN
 // =====================
-app.post("/ai-chat", async (req, res) => {
+tenantRouter.post("/ai-chat", async (req, res) => {
   try {
     const { message } = req.body;
 
     if (!message || typeof message !== "string" || message.trim() === "") {
       return res.status(400).json({ error: "El campo 'message' es obligatorio y debe ser texto" });
     }
+
+    const flow = loadTenantFlowSync(req.tenant.id);
 
     const intent = await detectIntent(message.trim());
     const node = flow[intent] || flow.default || flow.start || {
@@ -63,47 +79,49 @@ app.post("/ai-chat", async (req, res) => {
 // =====================
 // ENDPOINTS ORIGINALES (árbol de decisiones)
 // =====================
-app.post("/chat", (req, res) => {
+tenantRouter.post("/chat", (req, res) => {
   const { nodeId, option } = req.body;
+  const flow = loadTenantFlowSync(req.tenant.id);
   if (!nodeId) {
-    return res.json({ node: "start", data: getNode() });
+    return res.json({ node: "start", data: getNode(flow) });
   }
-  const next = getNextNode(nodeId, option);
+  const next = getNextNode(flow, nodeId, option);
   res.json({ data: next });
 });
 
-app.get("/flows", (req, res) => res.json(flow));
+tenantRouter.get("/flows", (req, res) => {
+  const flow = loadTenantFlowSync(req.tenant.id);
+  return res.json(flow);
+});
 
 // =====================
 // ADMIN: UPDATE + PERSISTENCIA REAL EN DISCO
 // =====================
-app.post("/update", (req, res) => {
+tenantRouter.post("/update", (req, res) => {
   try {
     const { node, message } = req.body;
     if (!node || !message) {
       return res.status(400).json({ error: "Datos incompletos" });
     }
+    const flow = loadTenantFlowSync(req.tenant.id);
+
     if (!flow[node]) {
       return res.status(404).json({ error: "Nodo no encontrado" });
     }
 
     flow[node].message = message;
 
-    // Persistencia real
-    const fs = require("fs");
-    const path = require("path");
-    const flowPath = path.join(__dirname, "flows", "flow.json");
-    fs.writeFileSync(flowPath, JSON.stringify(flow, null, 2));
+    // Persistencia por tenant (evita fugas cross-tenant)
+    saveTenantFlowSync(req.tenant.id, flow);
 
-    console.log(`✅ Nodo "${node}" actualizado y guardado en disco`);
+    console.log(`✅ [${req.tenant.id}] Nodo "${node}" actualizado y guardado en disco`);
     res.json({ status: "ok" });
   } catch (error) {
     console.error("❌ Error al actualizar flow:", error.message);
     res.status(500).json({ error: "Error interno al guardar cambios" });
   }
 });
-
-app.get("/test", (req, res) => res.send("✅ Servidor ISP Bot funcionando correctamente"));
+app.use(tenantRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

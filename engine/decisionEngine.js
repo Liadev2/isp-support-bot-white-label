@@ -1,32 +1,20 @@
-const flow = require("../flows/flow.json")
+function getNode(flow, nodeId) {
+  if (!flow || typeof flow !== "object") return null;
 
-function getNode(nodeId){
-
- if(!nodeId){
-  return flow["start"]
- }
-
- return flow[nodeId]
+  if (!nodeId) return flow["start"] || null;
+  return flow[nodeId] || null;
 }
 
-function getNextNode(currentNode, option){
+function getNextNode(flow, currentNode, option) {
+  if (!flow || typeof flow !== "object") return null;
 
- const node = flow[currentNode]
+  const node = flow[currentNode];
+  if (!node || !node.options) return null;
 
- if(!node){
-  return null
- }
+  const selected = node.options[option];
+  if (!selected || !selected.next) return null;
 
- const selected = node.options[option]
-
- if(!selected){
-  return null
- }
-
- return flow[selected.next]
+  return flow[selected.next] || null;
 }
 
-module.exports = {
- getNode,
- getNextNode
-}
+module.exports = { getNode, getNextNode };

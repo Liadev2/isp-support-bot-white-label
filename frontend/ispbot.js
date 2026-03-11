@@ -35,7 +35,9 @@ async function startChat(){
 const res = await fetch("http://localhost:3000/chat",{
 method:"POST",
 headers:{
-"Content-Type":"application/json"
+"Content-Type":"application/json",
+"x-tenant-id": "ispA",
+"x-tenant-key": "dev-ispA-key"
 },
 body:JSON.stringify({})
 })
@@ -53,7 +55,9 @@ async function selectOption(option){
 const res = await fetch("http://localhost:3000/chat",{
 method:"POST",
 headers:{
-"Content-Type":"application/json"
+"Content-Type":"application/json",
+"x-tenant-id": "ispA",
+"x-tenant-key": "dev-ispA-key"
 },
 body:JSON.stringify({
 nodeId:currentNode,
