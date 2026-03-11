@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import selfCareRoutes from "./routes/selfCareRoutes";
+import { adminBasicAuth } from "./middleware/AdminBasicAuth";
 
 export function createApp() {
   const app = express();
@@ -26,6 +27,10 @@ export function createApp() {
 
   app.get("/health", (_req, res) => {
     res.json({ status: "ok" });
+  });
+
+  app.get("/admin", adminBasicAuth, (_req, res) => {
+    res.json({ status: "ok", message: "Admin dashboard autenticado" });
   });
 
   app.use("/api/self-care", selfCareRoutes);

@@ -59,6 +59,20 @@
   }
  },
 
+ "slow_internet": {
+  "message": "Voy a ejecutar un diagnóstico básico de tu conexión (latencia y estabilidad). Esto puede tardar unos segundos.",
+  "options": {
+   "1": {
+    "text": "El internet sigue lento",
+    "next": "create_ticket"
+   },
+   "2": {
+    "text": "Ahora funciona mejor",
+    "next": "resolved"
+   }
+  }
+ },
+
  "resolved": {
   "message": "Perfecto 🎉 El problema está resuelto.",
   "options": {}

@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
 const { detectIntent } = require("./engine/aiEngine");
-const { getNode, getNextNode } = require("./engine/decisionEngine");
+const { getNode } = require("./engine/decisionEngine");
 const { tenantIsolation } = require("./middleware/tenantIsolation");
 const { loadTenantFlowSync, saveTenantFlowSync } = require("./lib/tenantFlowStore");
 
@@ -79,14 +79,50 @@ tenantRouter.post("/ai-chat", async (req, res) => {
 // =====================
 // ENDPOINTS ORIGINALES (árbol de decisiones)
 // =====================
-tenantRouter.post("/chat", (req, res) => {
+async function runSlowInternetDiagnostics(tenantId, context) {
+  // Stub seguro: aquí podrías integrar un NetworkProvider real.
+  // No accede a secretos ni a estado global.
+  void tenantId;
+  void context;
+  return {
+    latencyMs: null,
+    packetLossPercent: null,
+    status: "pending_integration",
+    summary:
+      "Diagnóstico básico ejecutado. Para producción, aquí se integraría con el sistema de red (ping, interfaz, etc.).",
+  };
+}
+
+tenantRouter.post("/chat", async (req, res) => {
   const { nodeId, option } = req.body;
   const flow = loadTenantFlowSync(req.tenant.id);
+
   if (!nodeId) {
     return res.json({ node: "start", data: getNode(flow) });
   }
-  const next = getNextNode(flow, nodeId, option);
-  res.json({ data: next });
+
+  const current = flow[nodeId];
+  if (!current || !current.options) {
+    return res.json({ data: null });
+  }
+
+  const selected = current.options[option];
+  if (!selected || !selected.next) {
+    return res.json({ data: null });
+  }
+
+  const nextId = selected.next;
+  let node = getNode(flow, nextId);
+
+  if (nextId === "slow_internet" && node) {
+    const diagnostic = await runSlowInternetDiagnostics(req.tenant.id, {
+      nodeId,
+      option,
+    });
+    node = { ...node, diagnostic };
+  }
+
+  res.json({ data: node });
 });
 
 tenantRouter.get("/flows", (req, res) => {
