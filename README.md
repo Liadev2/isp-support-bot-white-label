@@ -30,4 +30,4 @@ Clasificación automática de intenciones + árbol de decisiones + fallback segu
 ## Soporte
 Este bot está listo para producción. Si necesitas personalización (logo, colores, más intents), contáctame.
 
-Desarrollado con ❤️ para ISP españoles y latinoamericanos.
+Desarrollado para ISP españoles y latinoamericanos.
