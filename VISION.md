@@ -98,4 +98,3 @@ Resultado: **el mismo motor** sirve a múltiples ISPs, pero cada uno ve un bot 1
    - Todas las acciones técnicas quedan registradas en `audit_logs`.
 
 En conjunto, este diseño está pensado para pasar revisiones técnicas y de seguridad de un ISP mediano/grande, ofreciendo **aislamiento fuerte entre clientes, trazabilidad y extensibilidad** sin sacrificar la velocidad de despliegue.
-
