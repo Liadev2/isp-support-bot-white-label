@@ -4,7 +4,7 @@ Asistente IA para soporte técnico de proveedores de internet.
 Clasificación automática de intenciones + árbol de decisiones + fallback seguro.
 
 ## Características
-- Detección de intención con xAI Grok (grok-4-1-fast)
+- Detección de intención con OpenAI (gpt-4o-mini)
 - Flujo de troubleshooting para ISP (no internet, lento, facturación, soporte humano)
 - Panel admin simple (/flows y /update)
 - Totalmente white-label (cambia nombre y logo por cliente)
@@ -14,7 +14,7 @@ Clasificación automática de intenciones + árbol de decisiones + fallback segu
 
 1. Clona este repositorio
 2. `npm install`
-3. Copia `.env.example` → `.env` y pega tu clave de https://console.x.ai
+3. Copia `.env.example` → `.env` y pega tu API key de https://platform.openai.com/api-keys
 4. `node server.js`
 
 ## Endpoints principales

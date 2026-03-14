@@ -1,9 +1,9 @@
 const OpenAI = require("openai");
 require("dotenv").config();
 
+// OpenAI gpt-4o-mini para clasificación de intenciones (económico y rápido)
 const client = new OpenAI({
-  apiKey: process.env.XAI_API_KEY,
-  baseURL: "https://api.x.ai/v1"   // Oficial xAI – confirmado marzo 2026
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 async function detectIntent(message) {
@@ -24,7 +24,7 @@ Mensaje del usuario: "${message.trim()}"
 Respuesta (una sola palabra):`;
 
   const completion = await client.chat.completions.create({
-    model: "grok-4-1-fast-non-reasoning",   // Modelo más barato y rápido para clasificación (0,20/0,50 USD por millón tokens)
+    model: "gpt-4o-mini",   // OpenAI: económico y rápido para clasificación de intenciones
     messages: [{ role: "user", content: prompt }],
     temperature: 0,
     max_tokens: 10
