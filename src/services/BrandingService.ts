@@ -25,7 +25,7 @@ export class BrandingService {
 
     if (res.rowCount === 0) {
       return {
-        botName: tenant.name,
+        botName: tenant.name ?? tenant.code ?? "Soporte",
       };
     }
 

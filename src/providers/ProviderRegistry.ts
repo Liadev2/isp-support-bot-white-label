@@ -11,6 +11,7 @@ import { ZteOltNetworkProvider } from "./network/ZteOltNetworkProvider";
 export interface TenantConfig {
   id: string;
   code: string;
+  name?: string;
   billingType: "wispro" | "splynx" | "mikrowisp";
   billingBaseUrl: string;
   billingApiToken: string;
@@ -27,6 +28,7 @@ export class ProviderRegistry {
       SELECT
         t.id,
         t.code,
+        t.name,
         cfg.billing_type      AS "billingType",
         cfg.billing_base_url  AS "billingBaseUrl",
         cfg.billing_api_token AS "billingApiToken",
